@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> head }}
+
+<body>
+
+  {{> navbar}}
+
+
+
+  <!-- end search area -->
+
+  <!-- hero area -->
+  <div class="hero-area hero-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-9 offset-lg-2 text-center">
+          <div class="hero-text">
+            <div class="hero-text-tablecell">
+              <form>
+                <div class="form-group text-light">
+                  <label for="exampleInputEmail1">Email address</label>
+                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                    name="email">
+                  {{!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with
+                    anyone else.</small> --}}
+                </div>
+                <div class="form-group text-light">
+                  <label for="exampleInputPassword1">Password</label>
+                  <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                </div>
+                <div class="form-group form-check text-light">
+                  <input type="checkbox" class="form-check-input" id="exampleCheck1" value="true">
+                  <label class="form-check-label" for="exampleCheck1">Login As Seller</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{> script}}
+  <script>
+    function getFormData($form) {
+      var unindexed_array = $form.serializeArray();
+      console.log(unindexed_array);
+      var indexed_array = {};
+
+      $.map(unindexed_array, function (n, i) {
+        indexed_array[n['name']] = n['value'];
+      });
+
+      return indexed_array;
+    }
+    const url = "signin";
+    const form = document.querySelector("form");
+    form.addEventListener('submit', (e) => {
+      var $form = $("form");
+      var data = getFormData($form);
+      e.preventDefault();
+      console.log({ ...data, isSeller: document.getElementById("exampleCheck1").checked });
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: { ...data, isSeller: document.getElementById("exampleCheck1").checked },
+        success: function (response) {
+          alert("success");
+          window.location.replace(response.url)
+        },
+        error: function (error) {
+          console.log(error);
+          alert(error.responseJSON.error ? error.responseJSON.error : error.message);
+        },
+      });
+    })
+  </script>
+</body>
+
+</html>

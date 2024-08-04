@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> head }}
+
+<body>
+  {{> navbar}}
+
+
+  <!-- breadcrumb-section -->
+  <div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2 text-center">
+          <div class="breadcrumb-text">
+            <p>Choose from the best cuisines available around you!</p>
+            <h1>Shop</h1><br>
+            <button style="border-radius:10px" type="button" class="button button1" data-toggle="modal" data-target="#exampleModal">
+              Apply Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end breadcrumb section -->
+  <!-- Button trigger modal -->
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Filter to be applied</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-8">
+              <div class="checkout-accordion-wrap">
+                <div class="accordion" id="accordionExample">
+                  <div class="card single-accordion">
+                    <div class="card-header" id="headingOne">
+                      <h5 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                          aria-expanded="true" aria-controls="collapseOne">
+                          Your Product
+                        </button>
+                      </h5>
+                    </div>
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                      data-parent="#accordionExample">
+                      <div class="card-body">
+                        <div class="billing-address-form">
+                          <div class="row">
+                            <div class="col-lg-8">
+                              <div class="row">
+                                <p><input type="number" placeholder="Price ₹" id="Filterprice" name="price"></p>
+                              </div>
+                              <div class="row">
+                                <div class="card single-accordion">
+                                  <div class="card-header" id="headingTwo">
+                                    <h5 class="mb-0">
+                                      <input type="checkbox" id="FilterIsVeg" name="isVeg">
+                                      <label for="IsVeg">Veg</label><br>
+                                    </h5>
+                                  </div>
+                                </div>
+                                <div class="card single-accordion">
+                                  <div class="card-header" id="headingThree">
+                                    <h5 class="mb-0">
+                                      <input type="checkbox" id="FilterNonVeg" name="NonVeg">
+                                      <label for="NonVeg"> Non Veg</label><br>
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-lg-4">
+                              <div class="order-details-wrap">
+                                <table class="current-list-item">
+                                  <label> Select Category: </label> <br>
+                                  <select name="category" id="Filtercategory">
+                                    <option value="null"> Select Category
+                                    </option>
+                                    <option value="breakfast"> Breakfast
+                                    </option>
+                                    <option value="lunch"> Lunch
+                                    </option>
+                                    <option value="dinner"> Dinner
+                                    </option>
+                                    <option value="snacks"> Snacks
+                                    </option>
+                                  </select>
+                                </table><br><br><br><br><br>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary"
+            onclick="applyFilter(Filterprice,FilterIsVeg,FilterNonVeg,Filtercategory)">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- products -->
+  <div class="product-section mt-150 mb-150">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="product-filters">
+            <ul>
+              <li class="active" data-filter="*">All</li>
+              <li data-filter=".breakfast">Breakfast</li>
+              <li data-filter=".launch">Lunch</li>
+              <li data-filter=".dinner">Dinner</li>
+              <li data-filter=".snacks">Snacks</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="row product-lists mt-2">
+        {{#each food }}
+        {{#each this.foods}}
+        <div class="col-lg-3 col-md-6 text-center {{ ../category }}">
+          <div class="single-product-item">
+            {{#if this.offer}}
+            <div class="product-badge offer-badge">
+              <p class="badge badge-success">{{ this.offer.discount }} - {{splitDate this.offer.validTill }}</p>
+            </div>
+            {{/if}}
+            <div class="product-image">
+              <a href="/food/{{ this._id }}"><img src="{{ this.image }}" alt="" height="300px"></a>
+            </div>
+            <h3>{{ this.name }}</h3>
+            <h3>{{ ../category }}</h3>
+            {{#if this.isVeg }}
+            <h3>
+              <span class="badge badge-success">Veg</span>
+            </h3>
+            {{else}}
+            <h3>
+              <span class="badge badge-danger">Non-Veg</span>
+            </h3>
+            {{/if}}
+            <p class="product-price">
+              {{#if this.offer}}
+              <del>₹{{ this.price }}</del>
+              <br>
+              <span>₹{{ this.offer.newprice }}</span>
+              {{else}}
+              ₹{{ this.price }}
+              {{/if}}
+
+            </p>
+            <form action="/cart/add/{{ this._id }}" method="post">
+                    <button style =" border-radius: 15px" type="submit" class="button button1"><b>Add to Cart</b></button>
+          <style>
+.button {
+  background-color: #ff7300;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1:hover {
+  background-color: white; 
+  color: #ff7300; 
+  border: 2px solid #ff7300;
+}
+
+.button1 {
+  background-color: #ff7300;
+  color: white;
+}
+</style>
+            </form>
+                        <button  style ="border-radius: 10px;background-color: white; 
+  color: #ff7300; 
+  border: 2px solid #ff7300;" type="button" class="btn btn-primary"
+              onclick="Payment(event,'{{this._id}}','{{ this.name }}','{{ this.image }}')"><b>Shop</b></button>
+          </div>
+        </div>
+        {{/each}}
+
+        {{/each}}
+      </div>
+    </div>
+  </div>
+  <!-- end products -->
+
+  {{> footer}}
+  <!-- end copyright -->
+
+  {{> script}}
+  {{> payment}}
+  <script>
+    function applyFilter(price, veg, nonveg, category) {
+      var price = price.value;
+      var veg = veg.checked;
+      var nonveg = nonveg.checked;
+      var category = category.value;
+      console.log(price, veg, nonveg, category);
+      window.location.href = `/shop?price=${price}&veg=${veg}&nonveg=${nonveg}${category !== 'null' ? `&category=${category}` : ''}`;
+    }
+  </script>
+</body>
+
+</html>

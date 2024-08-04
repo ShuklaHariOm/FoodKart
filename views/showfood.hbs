@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+{{> head}}
+
+<body>
+
+  {{> navbar}}
+
+  <!-- end search arewa -->
+
+  <!-- breadcrumb-section -->
+  <div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2 text-center">
+          <div class="breadcrumb-text">
+            <p>See more Details</p>
+            <h1>Single Product</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end breadcrumb section -->
+
+  <!-- single product -->
+  <div class="single-product mt-150 mb-150">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="single-product-img">
+            <img src="{{ food.image }}" alt="">
+            <br>
+            {{#if food.canReview}}
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary mt-5 button button1" data-toggle="modal" data-target="#exampleModal">
+              {{#if food.review}}
+              Update Review
+              {{else}}
+              Add Review
+              {{/if}}
+            </button>
+            {{#if food.review}}
+            <form action="/review/delete/{{ food.review._id }}" method="post">
+              <button class ="button button1" type="submit">Delete Review</button>
+            </form>
+            {{/if}}
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Your Review</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <form action="/review/add/{{ food._id }}" method="post">
+                    <div class="modal-body">
+                      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                        data-parent="#accordionExample">
+                        <div class="card-body">
+                          <div class="billing-address-form">
+                            <p><input type="number" placeholder="Rating 1-5" id="rating" name="rating" {{#if
+                                food.review}} value="{{ food.review.rating }}" {{/if}}></p>
+                            <p><input type="text" placeholder="Review" id="comment" name="comment" {{#if food.review}}
+                                value="{{ food.review.comment }}" {{/if}}></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="single-product-content">
+            <h3>{{ food.name }}</h3>
+            <a href="/myprofile/{{ food.belongsTo }}" target="_blank">{{ food.seller.name }}</a>
+
+            {{#if food.offer}}
+            <div class="product-badge offer-badge">
+              <p class="badge badge-success">{{ food.offer.discount }} - {{splitDate food.offer.validTill }}</p>
+            </div>
+            {{/if}}
+            <p class="single-product-pricing">
+
+              {{#if food.offer}}
+              <del>₹{{ food.price }}</del>
+              <br>
+              <span>₹{{ food.offer.newprice }}</span>
+              {{else}}
+              ₹{{ food.price }}
+              {{/if}}
+
+            </p>
+            {{#if food.isVeg }}
+            <h3>
+              <span class="badge badge-success">Veg</span>
+            </h3>
+            {{else}}
+            <h3>
+              <span class="badge badge-danger">Non-Veg</span>
+            </h3>
+            {{/if}}
+            <p>{{ food.description }}</p>
+            <div class="single-product-form">
+              <form action="/cart/add/{{ food._id }}" method="post">
+                <input type="number" name="quantity" value="{{ food.cart.quantity }}" id="quantity">
+                <button type="submit" class="cart-btn button button1"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                    <style>
+.button {
+  background-color: #ff7300;
+  border: none;
+  border-radius:16px;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.button1:hover {
+  background-color: white; 
+  color: #ff7300; 
+  border: 2px solid #ff7300;
+}
+
+.button1 {
+  background-color: #ff7300;
+  color: white;
+}
+</style>
+                <button type="button" class="cart-btn button button1"
+                  onclick="Payment(event,'{{ food._id }}','{{ food.name }}', '{{ food.image }}',quantity.value)"><i
+                    class="fas fa-shopping-cart"></i>Buy</button>
+              </form>
+              <p><strong>Categories: </strong>{{ food.category }}</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="comments-list-wrap">
+							<h3 class="comment-count-title">{{ food.TotalReviews}} Reviews</h3>
+							<div class="comment-list">
+                {{#each food.AllReviews }}
+                  
+								<div class="single-comment-body">
+									<div class="comment-user-avater">
+										<img src="https://randomuser.me/api/portraits/men/11.jpg" alt="">
+									</div>
+									<div class="comment-text-body">
+										<h4>
+                      <a href="/myprofile/{{ this.belongsTo._id}}" target="_blank">
+                      {{ this.belongsTo.name}}
+                      </a>
+                       <span class="comment-date">{{date this.createdAt}}</span>
+                    {{this.rating}} <i class="fas fa-star"></i></h4>
+                    </h4>
+										<p>{{ this.comment }}</p>
+									</div>
+								</div>
+                {{/each}}
+
+							</div>
+						</div>
+
+      </div>
+    </div>
+  </div>
+  <!-- end single product -->
+
+
+  {{> footer}}
+  {{> script}}
+  {{> payment}}
+</body>
+
+</html>

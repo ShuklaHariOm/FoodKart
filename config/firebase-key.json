@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "mealers-57236",
+  "private_key_id": "cfb29a499084c2ccfa4ca0795bd449bd79027e1f",
+  "client_email": "firebase-adminsdk-nv32p@mealers-57236.iam.gserviceaccount.com",
+  "client_id": "113952991554356531068",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-nv32p%40mealers-57236.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
